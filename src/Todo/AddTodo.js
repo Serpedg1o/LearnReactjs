@@ -1,19 +1,32 @@
 import React, {useState} from "react";
 import PropTypes from 'prop-types';
 
+function useInputValue (defaultValue='') {
+    const [value, setValue] = useState(defaultValue)
+
+    return {
+        bind {
+            value: value,
+            onChange: event => setValue(event.target.value)
+        }
+        clear: () => setValue('')
+    }
+}
+
 function AddTodo({onCreate}) {
-    const [value, setValue] = useState('')
+    const input = useInputValue('')
+    
     function submitHandler(event) {
         event.preventDefault()
 
-        if (value.trim()) {
-            onCreate(value)
-            setValue('')
+        if (input.value.trim()) {
+            onCreate(input.value)
+            // setValue('')
         }
     } 
     return (
         <form style={{marginBottom: '1rem'}} onSubmit={submitHandler}>
-            <input value={value} onChange={event => setValue(event.target.value)}>
+            <input {...input}>
             </input>
             <button type="submit">Add todo</button>
         </form>
